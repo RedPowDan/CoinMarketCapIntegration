@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Microsoft.Extensions.Hosting;
     using Domain.Services.Interfaces;
+
     public class CryptoUpdaterHostedService : BackgroundService
     {
         private readonly ILogger<CryptoUpdaterHostedService> _logger;
@@ -35,9 +36,7 @@
 
                 try
                 {
-                    await _cryptoService
-                        .UpdateCryptoForAllCurrencies(stoppingToken)
-                        .ConfigureAwait(false);
+                    _cryptoService.UpdateCryptoForAllCurrencies(stoppingToken);
 
                     _logger.LogInformation($"Sleep for {_sleepForTaskInMinutes} minutes...");
                     await Task

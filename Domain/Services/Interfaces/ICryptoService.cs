@@ -1,13 +1,14 @@
 ﻿using System.Threading;
-using System.Threading.Tasks;
+using Domain.Models;
 
 namespace Domain.Services.Interfaces
 {
-    public class ICryptoService
+    public interface ICryptoService
     {
-        public Task UpdateCryptoForAllCurrencies(CancellationToken stoppingToken)
-        {
-            throw new System.NotImplementedException();
-        }
+        public int[] GetIdsInApi(Crypto[] models);
+
+        public void UpdateOrCreateCrypto(Crypto[] models);
+
+        public void UpdateCryptoForAllCurrencies(CancellationToken stoppingToken);
     }
 }

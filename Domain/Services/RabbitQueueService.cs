@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using Domain.Dtos;
+﻿
 
 namespace Domain.Services
 {
+    using System.Collections.Generic;
+    using Dtos.Crypto;
     using Interfaces;
     using System;
     using System.Threading;
@@ -17,7 +18,7 @@ namespace Domain.Services
         private readonly Dictionary<Type, string> _dtoTypeToRoutingKeyMap =
             new Dictionary<Type, string>
             {
-                {typeof(CryptoDto), CryptoForecastRoutingKey}
+                {typeof(CryptoListingLatestResponseDto), CryptoForecastRoutingKey}
             };
 
         private readonly ILogger<RabbitQueueService> _logger;
