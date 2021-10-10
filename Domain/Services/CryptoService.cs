@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using Domain.Models;
-using Microsoft.Extensions.Logging;
-using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
-using System.Web;
-using Domain.Dtos.Crypto;
-using Newtonsoft.Json;
-
-namespace Domain.Services
+﻿namespace Domain.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Threading;
+    using Models;
+    using Microsoft.Extensions.Logging;
+    using System.Net.Http;
+    using System.Web;
+    using Dtos.Crypto;
+    using Newtonsoft.Json;
     using Interfaces;
 
     public class CryptoService : ICryptoService
@@ -68,6 +65,51 @@ namespace Domain.Services
             _context.SaveChanges();
         }
 
+        public CryptoInfoDto[] GetCryptoInfosWithFilters(
+            string searchString,
+            string sortOrder,
+            int countOutput,
+            int pageNumber)
+        {
+            // TODO: в дальнейшей реализации сделать сортировку с помощью массива аргументов
+
+            var cryptos = _context.Cryptos.Where(x => true);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                cryptos = cryptos.Where(c => c.Name.Contains(searchString)
+                                             || c.Symbol.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name":
+                    cryptos = cryptos.OrderBy(c => c.Name);
+                    break;
+                case "Symbol":
+                    cryptos = cryptos.OrderBy(c => c.Symbol);
+                    break;
+                case "Price":
+                    cryptos = cryptos.OrderBy(c => c.Price);
+                    break;
+                case "PercentChangePerHour":
+                    cryptos = cryptos.OrderBy(c => c.PercentChangePerHour);
+                    break;
+                case "PercentChangePerDay":
+                    cryptos = cryptos.OrderBy(c => c.PercentChangePerDay);
+                    break;
+                case "CapitalizationMarketCap":
+                    cryptos = cryptos.OrderBy(c => c.CapitalizationMarketCap);
+                    break;
+            }
+
+            cryptos = cryptos.Skip((pageNumber - 1) * countOutput).Take(countOutput);
+
+            var infosForCrypto = _metadataService.GetCryptoWithLogo(cryptos.ToArray());
+
+            return infosForCrypto;
+        }
+
         private void UpdateOrCreateCrypto(Crypto newCrypto)
         {
             var oldCrypto = _context.Cryptos.FirstOrDefault(x => x.IdInApi == newCrypto.IdInApi);
@@ -95,7 +137,9 @@ namespace Domain.Services
             var modelsCrypto = new List<Crypto>();
             foreach (var listingLatestData in listingLatestResponse.Data)
             {
-                modelsCrypto.Add(MapToCrypto(listingLatestData));
+                var mapCryptoModel = MapToCrypto(listingLatestData);
+                mapCryptoModel.DataUpdateTime = DateTime.Now; // TODO: Лучше сделать сервис котоырй будет выводить дату (по городу и тд.)
+                modelsCrypto.Add(mapCryptoModel);
             }
 
             return modelsCrypto.ToArray();
@@ -179,7 +223,6 @@ namespace Domain.Services
                 PercentChangePerHour = listingLatestData.Quote[CURRENCY_NAME].PercentChangeHour,
                 PercentChangePerDay = listingLatestData.Quote[CURRENCY_NAME].PercentChangeDay,
                 CapitalizationMarketCap = listingLatestData.Quote[CURRENCY_NAME].MarketCap,
-                DataUpdateTime = listingLatestData.Quote[CURRENCY_NAME].LastUpdated,
                 IdInApi = listingLatestData.Id
             };
         }

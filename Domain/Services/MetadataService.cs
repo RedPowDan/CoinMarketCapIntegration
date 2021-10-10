@@ -1,4 +1,5 @@
-﻿using Domain.Dtos.Crypto;
+﻿using System.Collections.Generic;
+using Domain.Dtos.Crypto;
 using Microsoft.Extensions.Logging;
 
 namespace Domain.Services
@@ -96,6 +97,41 @@ namespace Domain.Services
                 Crypto = cryptoModel,
                 LogoUri = metadata.Logo
             };
+        }
+
+        public CryptoInfoDto[] GetCryptoWithLogo(Crypto[] cryptoModels)
+        {
+            var idsCryptoInApi = cryptoModels
+                .GroupBy(x => x.ID)
+                .Select(y => y.Key)
+                .ToArray();
+
+            var metadataModelsForCryptoModels = _context.Metadata
+                .Where(x => idsCryptoInApi.Contains(x.Crypto.ID));
+
+            var cryptoInfos = new List<CryptoInfoDto>();
+
+            foreach (var cryptoModel in cryptoModels)
+            {
+                var metadataForModel = metadataModelsForCryptoModels
+                    .FirstOrDefault(x => x.Crypto.ID == cryptoModel.ID);
+                if (metadataForModel != null)
+                {
+                    cryptoInfos.Add(new CryptoInfoDto
+                    {
+                        Name = cryptoModel.Name,
+                        Symbol = cryptoModel.Symbol,
+                        Logo = metadataForModel.LogoUri,
+                        CurrentPriceUsd = cryptoModel.Price,
+                        PercentChangePerDay = cryptoModel.PercentChangePerDay,
+                        PercentChangePerHour = cryptoModel.PercentChangePerHour,
+                        CapitalizationMarketCap = cryptoModel.CapitalizationMarketCap,
+                        UpdateTime = cryptoModel.DataUpdateTime
+                    });
+                }
+            }
+
+            return cryptoInfos.ToArray();
         }
     }
 }

@@ -1,17 +1,15 @@
-﻿using System;
-
-namespace Domain.Models
+﻿namespace Domain.Dtos.Crypto
 {
-    public class Crypto
+    using System;
+    public class CryptoInfoDto
     {
-        public int ID { get; set; }
         public string Name { get; set; }
         public string Symbol { get; set; }
-        public decimal Price { get; set; }
+        public string Logo { get; set; }
+        public decimal CurrentPriceUsd { get; set; }
         public decimal PercentChangePerHour { get; set; }
         public decimal PercentChangePerDay { get; set; }
         public decimal CapitalizationMarketCap { get; set; }
-        public DateTime? DataUpdateTime { get; set; }
-        public int IdInApi { get; set; }
+        public DateTime UpdateTime { get; set; }
     }
 }

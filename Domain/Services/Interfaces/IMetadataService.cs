@@ -15,5 +15,7 @@ namespace Domain.Services.Interfaces
         public int[] GetCryptoIds(Metadata[] models);
 
         public Metadata MapToMetadata(string idCryptoModel, MetadataDto metadata);
+
+        public CryptoInfoDto[] GetCryptoWithLogo(Crypto[] cryptoModels);
     }
 }
