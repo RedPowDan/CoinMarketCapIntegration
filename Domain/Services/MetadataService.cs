@@ -126,7 +126,7 @@ namespace Domain.Services
                         PercentChangePerDay = cryptoModel.PercentChangePerDay,
                         PercentChangePerHour = cryptoModel.PercentChangePerHour,
                         CapitalizationMarketCap = cryptoModel.CapitalizationMarketCap,
-                        UpdateTime = cryptoModel.DataUpdateTime
+                        UpdateTime = cryptoModel.DataUpdateTime.GetValueOrDefault()
                     });
                 }
             }

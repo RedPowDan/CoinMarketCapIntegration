@@ -1,37 +1,63 @@
-﻿@model Domain.Dtos.Crypto.CryptoInfoDto[]
+﻿@model FrontOffice.Models.QuotesViewModel
+
+@{
+    ViewBag.Title = "Криптовалюта";
+}
+
+<form method="get">
+    <div class="form-inline form-group">
+        <label class="control-label">@Html.DisplayNameFor(modelItem => modelItem.InfoCryptoModels[0].Name) криптовалюты: </label>
+        <input name="searchString" class="form-control" />
+    </div>
+</form>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(modelItem => modelItem[0].Name)
+                @Html.ActionLink(@Html.DisplayNameFor(modelItem => modelItem.InfoCryptoModels[0].Name),
+                    $"Quotes",
+                    new { sortOrder = ViewBag.name })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].Symbol)
+
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.InfoCryptoModels[0].Symbol),
+                    $"Quotes",
+                    new { sortOrder = ViewBag.Symbol })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].Logo)
+                @Html.DisplayNameFor(model => model.InfoCryptoModels[0].Logo))
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].CurrentPriceUsd)
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.InfoCryptoModels[0].CurrentPriceUsd),
+                    $"Quotes",
+                    new { sortOrder = ViewBag.Price })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].PercentChangePerHour)
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.InfoCryptoModels[0].PercentChangePerHour),
+                    $"Quotes",
+                    new { sortOrder = ViewBag.PercentChangePerHour })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].PercentChangePerDay)
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.InfoCryptoModels[0].PercentChangePerDay),
+                    $"Quotes",
+                    new { sortOrder = ViewBag.PercentChangePerDay })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].CapitalizationMarketCap)
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.InfoCryptoModels[0].CapitalizationMarketCap),
+                    $"Quotes",
+                    new { sortOrder = ViewBag.CapitalizationMarketCap })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].UpdateTime)
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.InfoCryptoModels[0].UpdateTime),
+                    $"Quotes",
+                    new { sortOrder = ViewBag.UpdateTime })
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.InfoCryptoModels)
         {
             <tr>
                 <td>
@@ -63,4 +89,21 @@
     </tbody>
 </table>
 
-<div page-model="" sort-order=@ViewData["sort"] page-action="QuotesView"></div>
+@if (Model.HasPreviousPage)
+{
+    <a asp-action="Quotes"
+       asp-route-page="@(Model.GetPageNumber() - 1)"
+       class="btn btn-outline-dark">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Назад
+    </a>
+}
+@if (Model.HasNextPage)
+{
+    <a asp-action="Quotes"
+       asp-route-page="@(Model.GetPageNumber() + 1)"
+       class="btn btn-outline-dark">
+        Вперед
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+}

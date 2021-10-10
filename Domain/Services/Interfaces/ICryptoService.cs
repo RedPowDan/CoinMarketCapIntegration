@@ -6,15 +6,20 @@
 
     public interface ICryptoService
     {
+        public int GetCountCryptoModelsInDb();
+
         public int[] GetIdsInApi(Crypto[] models);
 
         public void UpdateOrCreateCrypto(Crypto[] models);
 
         public void UpdateCryptoForAllCurrencies(CancellationToken stoppingToken);
 
-        public CryptoInfoDto[] GetCryptoInfosWithFilters(
+        public Crypto[] GetCryptoModelsWithFilters(
             string searchString,
-            string sortOrder,
+            string sortOrder);
+
+        public Crypto[] GetCryptoInfosWithPaginate(
+            Crypto[] cryptoModels,
             int countOutput,
             int pageNumber);
     }

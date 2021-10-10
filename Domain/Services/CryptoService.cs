@@ -31,6 +31,11 @@
             _metadataService = metadataService;
         }
 
+        public int GetCountCryptoModelsInDb()
+        {
+            return _context.Cryptos.Count();
+        }
+
         public int[] GetIdsInApi(Crypto[] models)
         {
             if (models == null && models.Length == 0)
@@ -65,11 +70,9 @@
             _context.SaveChanges();
         }
 
-        public CryptoInfoDto[] GetCryptoInfosWithFilters(
+        public Crypto[] GetCryptoModelsWithFilters(
             string searchString,
-            string sortOrder,
-            int countOutput,
-            int pageNumber)
+            string sortOrder)
         {
             // TODO: в дальнейшей реализации сделать сортировку с помощью массива аргументов
 
@@ -103,11 +106,12 @@
                     break;
             }
 
-            cryptos = cryptos.Skip((pageNumber - 1) * countOutput).Take(countOutput);
+            return cryptos.ToArray();
+        }
 
-            var infosForCrypto = _metadataService.GetCryptoWithLogo(cryptos.ToArray());
-
-            return infosForCrypto;
+        public Crypto[] GetCryptoInfosWithPaginate(Crypto[] cryptoInfo, int countOutput, int pageNumber)
+        {
+            return cryptoInfo.Skip((pageNumber - 1) * countOutput).Take(countOutput).ToArray();
         }
 
         private void UpdateOrCreateCrypto(Crypto newCrypto)
