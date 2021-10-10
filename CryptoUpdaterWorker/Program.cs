@@ -4,6 +4,7 @@ namespace CryptoUpdaterWorker
     using Microsoft.Extensions.Hosting;
     using HostedServices;
     using Microsoft.Extensions.DependencyInjection;
+    using Autofac.Extensions.DependencyInjection;
     public class Program
     {
         public static void Main(string[] args)
@@ -13,6 +14,7 @@ namespace CryptoUpdaterWorker
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<CryptoUpdaterHostedService>();

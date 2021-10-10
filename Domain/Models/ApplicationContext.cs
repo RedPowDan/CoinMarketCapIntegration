@@ -1,7 +1,8 @@
 ﻿namespace Domain.Models
 {
     using Microsoft.EntityFrameworkCore;
-    public class DomainContext : DbContext
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+    public class DomainContext : IdentityDbContext
     {
         public DbSet<Crypto> Cryptos { get; set; }
         public DbSet<Metadata> Metadata { get; set; }

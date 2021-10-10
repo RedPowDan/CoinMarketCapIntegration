@@ -103,19 +103,28 @@ namespace Domain.Services
 
         private CryptoListingLatestResponseDto GetCryptoListingLatestResponse()
         {
-            using var httpClient = new HttpClient();
-            var uriBuilder = new UriBuilder("https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/historical");
+            CryptoListingLatestResponseDto listingLatestResponse = null;
+            try
+            {
+                using var httpClient = new HttpClient();
+                var uriBuilder = new UriBuilder("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest");
 
-            var queryString = HttpUtility.ParseQueryString(string.Empty);
+                var queryString = HttpUtility.ParseQueryString(string.Empty);
 
-            uriBuilder.Query = queryString.ToString();
+                uriBuilder.Query = queryString.ToString();
 
-            var client = new WebClient();
-            client.Headers.Add("X-CMC_PRO_API_KEY", API_KEY);
-            client.Headers.Add("Accepts", "application/json");
+                var client = new WebClient();
+                client.Headers.Add("X-CMC_PRO_API_KEY", API_KEY);
+                client.Headers.Add("Accepts", "application/json");
 
-            var responseMessage = client.DownloadString(uriBuilder.ToString());
-            var listingLatestResponse = DeserializeListingLatestFromString(responseMessage);
+                var responseMessage = client.DownloadString(uriBuilder.ToString());
+
+                listingLatestResponse = DeserializeListingLatestFromString(responseMessage);
+            }
+            catch (Exception es)
+            {
+                throw new Exception("Error in download data");
+            }
 
             return listingLatestResponse;
         }
@@ -133,11 +142,11 @@ namespace Domain.Services
             }
 
             var modelsMetadata = new List<Metadata>();
-            foreach (var keyMetaData in metadataResponse.Metadata.Keys)
+            foreach (var keyMetaData in metadataResponse.Data.Keys)
             {
                 var metadataModel = _metadataService.MapToMetadata(
                                                         keyMetaData,
-                                                        metadataResponse.Metadata[keyMetaData]);
+                                                        metadataResponse.Data[keyMetaData]);
                 if(metadataModel != null)
                     modelsMetadata.Add(metadataModel);
             }
@@ -150,9 +159,7 @@ namespace Domain.Services
             var uri = new UriBuilder("https://pro-api.coinmarketcap.com/v1/cryptocurrency/info");
             var queryString = HttpUtility.ParseQueryString(string.Empty);
 
-            queryString["id"] = string.Join(", ", cryptoIdsInApi);
-
-            uri.Query = queryString.ToString() ?? string.Empty;
+            uri.Query = GetRequestFromMassInt(cryptoIdsInApi) ?? string.Empty;
 
             var client = new WebClient();
             client.Headers["X-CMC_PRO_API_KEY"] = API_KEY;
@@ -195,6 +202,24 @@ namespace Domain.Services
             });
 
             return outputData;
+        }
+
+        private string GetRequestFromMassInt(int[] mass)
+        {
+            if (mass == null || mass.Length == 0)
+            {
+                return null;
+            }
+
+            string outputString = mass[0].ToString();
+            for (int i = 1; i < mass.Length; i++)
+            {
+                outputString += $",{mass[i]}";
+            }
+
+            var requestString = "id=" + outputString;
+
+            return requestString;
         }
     }
 }

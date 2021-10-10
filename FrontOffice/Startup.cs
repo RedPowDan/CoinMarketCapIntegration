@@ -1,3 +1,5 @@
+using Domain.Models;
+
 namespace FrontOffice
 {
     using Data;
@@ -23,11 +25,11 @@ namespace FrontOffice
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<DomainContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<DomainContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

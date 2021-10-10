@@ -45,6 +45,7 @@ namespace Domain.Services
             if (oldMetadata == null)
             {
                 _context.Metadata.Add(newMetadata);
+                return;
             }
 
             if (oldMetadata.LogoUri != newMetadata.LogoUri)
@@ -82,8 +83,7 @@ namespace Domain.Services
         public Metadata MapToMetadata(string idCryptoModel, MetadataDto metadata)
         {
             var id = int.Parse(idCryptoModel);
-            var cryptoModel = _context.Cryptos
-                .LastOrDefault(x => x.ID == id);
+            var cryptoModel = _context.Cryptos.FirstOrDefault(x => x.IdInApi == id);
 
             if (cryptoModel == null)
             {
