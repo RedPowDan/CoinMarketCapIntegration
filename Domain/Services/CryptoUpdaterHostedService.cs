@@ -44,7 +44,7 @@
                         .ConfigureAwait(false);
                 }
                 catch (Exception e)
-                    {
+                {
                     _logger.LogError(e, "Crypto update error");
                 }
             }
