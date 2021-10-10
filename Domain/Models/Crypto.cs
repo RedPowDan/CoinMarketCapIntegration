@@ -13,5 +13,15 @@ namespace Domain.Models
         public decimal CapitalizationMarketCap { get; set; }
         public DateTime? DataUpdateTime { get; set; }
         public int IdInApi { get; set; }
+
+        public void MapToModel(Crypto crypto)
+        {
+            crypto.Name = Name;
+            crypto.Symbol = Symbol;
+            crypto.Price = Price;
+            crypto.PercentChangePerHour = PercentChangePerHour;
+            crypto.PercentChangePerDay = PercentChangePerDay;
+            crypto.DataUpdateTime = DataUpdateTime;
+        }
     }
 }
