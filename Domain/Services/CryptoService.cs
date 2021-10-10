@@ -121,9 +121,12 @@
             if (oldCrypto == null)
             {
                 _context.Cryptos.Add(newCrypto);
+                return;
             }
 
-            oldCrypto = newCrypto;
+            newCrypto.MapToModel(oldCrypto);
+
+            _context.SaveChanges();
         }
 
         private Crypto[] GetCryptoModelsFromApi()
