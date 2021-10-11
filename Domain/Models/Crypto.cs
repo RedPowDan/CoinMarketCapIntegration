@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Domain.Models
+﻿namespace Domain.Models
 {
+    using System;
     public class Crypto
     {
         public int ID { get; set; }

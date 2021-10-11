@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace FrontOffice.Models
+﻿namespace FrontOffice.Models
 {
     using Domain.Dtos.Crypto;
-
+    using System;
     public class QuotesViewModel : PaginateView
     {
         private readonly int pageNumber;

@@ -13,6 +13,9 @@
     using Newtonsoft.Json;
     using Interfaces;
 
+    /// <summary>
+    /// Сервис с криптовалютой. Загрузка, создание, обновление.
+    /// </summary>
     public class CryptoService : ICryptoService
     {
         private readonly ILogger<CryptoService> _logger;
@@ -31,11 +34,20 @@
             _metadataService = metadataService;
         }
 
+        /// <summary>
+        /// Возвращает количество моделей в таблице crypto
+        /// </summary>
+        /// <returns></returns>
         public int GetCountCryptoModelsInDb()
         {
             return _context.Cryptos.Count();
         }
 
+        /// <summary>
+        /// Получает айдишники моделей в API 
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
         public int[] GetIdsInApi(Crypto[] models)
         {
             if (models == null && models.Length == 0)
@@ -49,6 +61,24 @@
                 .ToArray();
         }
 
+        /// <summary>
+        /// Обновляет, либо создает модели
+        /// </summary>
+        /// <param name="models"></param>
+        public void UpdateOrCreateCrypto(Crypto[] newCryptoModels)
+        {
+            foreach (var cryptoModel in newCryptoModels)
+            {
+                UpdateOrCreateCrypto(cryptoModel);
+            }
+
+            _context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Используется для загрузки, создания, обновления информации про криптовалюту
+        /// </summary>
+        /// <param name="stoppingToken"></param>
         public void UpdateCryptoForAllCurrencies(CancellationToken stoppingToken)
         {
             _logger.LogInformation("UpdateCryptoForAllCurrencies started");
@@ -60,16 +90,12 @@
             UpdateOrCreateCryptoCurrencyMetadata(cryptoIdsInApi);
         }
 
-        public void UpdateOrCreateCrypto(Crypto[] newCryptoModels)
-        {
-            foreach (var cryptoModel in newCryptoModels)
-            {
-                UpdateOrCreateCrypto(cryptoModel);
-            }
-
-            _context.SaveChanges();
-        }
-
+        /// <summary>
+        /// Получает модели crypto с фильтрами
+        /// </summary>
+        /// <param name="searchString">Искомая строка</param>
+        /// <param name="sortOrder">Сортировка</param>
+        /// <returns></returns>
         public Crypto[] GetCryptoModelsWithFilters(
             string searchString,
             string sortOrder)
@@ -109,6 +135,13 @@
             return cryptos.ToArray();
         }
 
+        /// <summary>
+        /// Мапит и выводит то кол-во которое задано
+        /// </summary>
+        /// <param name="cryptoModels"></param>
+        /// <param name="countOutput"></param>
+        /// <param name="pageNumber"></param>
+        /// <returns></returns>
         public Crypto[] GetCryptoInfosWithPaginate(Crypto[] cryptoInfo, int countOutput, int pageNumber)
         {
             return cryptoInfo.Skip((pageNumber - 1) * countOutput).Take(countOutput).ToArray();
@@ -125,8 +158,6 @@
             }
 
             newCrypto.MapToModel(oldCrypto);
-
-            _context.SaveChanges();
         }
 
         private Crypto[] GetCryptoModelsFromApi()

@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using Domain.Dtos.Crypto;
-using Microsoft.Extensions.Logging;
-
-namespace Domain.Services
+﻿namespace Domain.Services
 {
     using Interfaces;
     using System.Linq;
     using Models;
+    using System.Collections.Generic;
+    using Dtos.Crypto;
+    using Microsoft.Extensions.Logging;
 
     public class MetadataService : IMetadataService
     {
@@ -20,14 +19,28 @@ namespace Domain.Services
             _logger = logger;
         }
 
+        /// <summary>
+        /// Выводит массив моделей по айдишникам
+        /// </summary>
+        /// <param name="Ids">Айдишники моделей</param>
+        /// <returns></returns>
         public Metadata[] GetMetadataForIds(int[] Ids)
         {
+            if (Ids == null)
+            {
+                return null;
+            }
+
             return _context
                     .Metadata
-                    .Where(l => Ids.Contains(l.Id))
+                    .Where(x => Ids.Contains(x.Id))
                     .ToArray();
         }
 
+        /// <summary>
+        /// Обновляет или создает модели
+        /// </summary>
+        /// <param name="newMetadataModels">Новые модели метаданных</param>
         public void UpdateOrCreateMetadataForModels(Metadata[] newMetadataModels)
         {
             foreach (var newMetadata in newMetadataModels)
@@ -49,15 +62,17 @@ namespace Domain.Services
                 return;
             }
 
-            if (oldMetadata.LogoUri != newMetadata.LogoUri)
-            {
-                oldMetadata.LogoUri = newMetadata.LogoUri;
-            }
+            newMetadata.MapToModel(oldMetadata);
         }
 
+        /// <summary>
+        /// Получает айдишники моделей
+        /// </summary>
+        /// <param name="models">Модели</param>
+        /// <returns></returns>
         public int[] GetIds(Metadata[] models)
         {
-            if (models == null && models.Length == 0)
+            if (models == null)
             {
                 return null;
             }
@@ -68,9 +83,14 @@ namespace Domain.Services
                 .ToArray();
         }
 
+        /// <summary>
+        /// Получает айдишники модели crypto 
+        /// </summary>
+        /// <param name="models">Модели</param>
+        /// <returns></returns>
         public int[] GetCryptoIds(Metadata[] models)
         {
-            if (models == null && models.Length == 0)
+            if (models == null)
             {
                 return null;
             }
@@ -80,7 +100,13 @@ namespace Domain.Services
                 .Select(y => y.Key)
                 .ToArray();
         }
-        
+
+        /// <summary>
+        /// Выводит новую мдель метаданных
+        /// </summary>
+        /// <param name="idCryptoModel">Айди модели crypto</param>
+        /// <param name="metadata">Данные метаданных</param>
+        /// <returns></returns>
         public Metadata MapToMetadata(string idCryptoModel, MetadataDto metadata)
         {
             var id = int.Parse(idCryptoModel);
@@ -99,6 +125,11 @@ namespace Domain.Services
             };
         }
 
+        /// <summary>
+        /// Выводит информацию для отображения с метаданными
+        /// </summary>
+        /// <param name="cryptoModels">Модели crypto</param>
+        /// <returns></returns>
         public CryptoInfoDto[] GetCryptoWithLogo(Crypto[] cryptoModels)
         {
             var idsCryptoInApi = cryptoModels
