@@ -30,8 +30,7 @@
         /// <summary>
         /// Используется для загрузки, создания, обновления информации про криптовалюту
         /// </summary>
-        /// <param name="stoppingToken"></param>
-        public void UpdateCryptoForAllCurrencies(CancellationToken stoppingToken);
+        public void UpdateCryptoForAllCurrencies();
 
         /// <summary>
         /// Получает модели crypto с фильтрами

@@ -36,7 +36,7 @@
 
                 try
                 {
-                    _cryptoService.UpdateCryptoForAllCurrencies(stoppingToken);
+                    _cryptoService.UpdateCryptoForAllCurrencies();
 
                     _logger.LogInformation($"Sleep for {_sleepForTaskInMinutes} minutes...");
                     await Task
