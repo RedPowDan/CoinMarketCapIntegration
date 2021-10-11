@@ -113,22 +113,22 @@
             switch (sortOrder)
             {
                 case "name":
-                    cryptos = cryptos.OrderBy(c => c.Name);
+                    cryptos = cryptos.OrderByDescending(c => c.Name);
                     break;
                 case "Symbol":
-                    cryptos = cryptos.OrderBy(c => c.Symbol);
+                    cryptos = cryptos.OrderByDescending(c => c.Symbol);
                     break;
                 case "Price":
-                    cryptos = cryptos.OrderBy(c => c.Price);
+                    cryptos = cryptos.OrderByDescending(c => c.Price);
                     break;
                 case "PercentChangePerHour":
-                    cryptos = cryptos.OrderBy(c => c.PercentChangePerHour);
+                    cryptos = cryptos.OrderByDescending(c => c.PercentChangePerHour);
                     break;
                 case "PercentChangePerDay":
-                    cryptos = cryptos.OrderBy(c => c.PercentChangePerDay);
+                    cryptos = cryptos.OrderByDescending(c => c.PercentChangePerDay);
                     break;
                 case "CapitalizationMarketCap":
-                    cryptos = cryptos.OrderBy(c => c.CapitalizationMarketCap);
+                    cryptos = cryptos.OrderByDescending(c => c.CapitalizationMarketCap);
                     break;
             }
 

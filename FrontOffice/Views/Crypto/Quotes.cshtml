@@ -7,7 +7,7 @@
 <form method="get">
     <div class="form-inline form-group">
         <label class="control-label">@Html.DisplayNameFor(modelItem => modelItem.InfoCryptoModels[0].Name) криптовалюты: </label>
-        <input name="searchString" class="form-control" />
+        <input name="searchString" class="form-control" value="@ViewData["searchString"]" />
     </div>
 </form>
 
@@ -17,13 +17,13 @@
             <th>
                 @Html.ActionLink(@Html.DisplayNameFor(modelItem => modelItem.InfoCryptoModels[0].Name),
                     $"Quotes",
-                    new { sortOrder = ViewBag.name })
+                    new { sortOrder = ViewBag.name, searchString = ViewData["searchString"]})
             </th>
             <th>
 
                 @Html.ActionLink(@Html.DisplayNameFor(model => model.InfoCryptoModels[0].Symbol),
                     $"Quotes",
-                    new { sortOrder = ViewBag.Symbol })
+                    new { sortOrder = ViewBag.Symbol, searchString = ViewData["searchString"]})
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.InfoCryptoModels[0].Logo))
@@ -31,27 +31,27 @@
             <th>
                 @Html.ActionLink(@Html.DisplayNameFor(model => model.InfoCryptoModels[0].CurrentPriceUsd),
                     $"Quotes",
-                    new { sortOrder = ViewBag.Price })
+                    new { sortOrder = ViewBag.Price, searchString = ViewData["searchString"] })
             </th>
             <th>
                 @Html.ActionLink(@Html.DisplayNameFor(model => model.InfoCryptoModels[0].PercentChangePerHour),
                     $"Quotes",
-                    new { sortOrder = ViewBag.PercentChangePerHour })
+                    new { sortOrder = ViewBag.PercentChangePerHour, searchString = ViewData["searchString"]})
             </th>
             <th>
                 @Html.ActionLink(@Html.DisplayNameFor(model => model.InfoCryptoModels[0].PercentChangePerDay),
                     $"Quotes",
-                    new { sortOrder = ViewBag.PercentChangePerDay })
+                    new { sortOrder = ViewBag.PercentChangePerDay, searchString = ViewData["searchString"]})
             </th>
             <th>
                 @Html.ActionLink(@Html.DisplayNameFor(model => model.InfoCryptoModels[0].CapitalizationMarketCap),
                     $"Quotes",
-                    new { sortOrder = ViewBag.CapitalizationMarketCap })
+                    new { sortOrder = ViewBag.CapitalizationMarketCap, searchString = ViewData["searchString"]})
             </th>
             <th>
                 @Html.ActionLink(@Html.DisplayNameFor(model => model.InfoCryptoModels[0].UpdateTime),
                     $"Quotes",
-                    new { sortOrder = ViewBag.UpdateTime })
+                    new { sortOrder = ViewBag.UpdateTime, searchString = ViewData["searchString"]})
             </th>
             <th></th>
         </tr>
@@ -92,7 +92,9 @@
 @if (Model.HasPreviousPage)
 {
     <a asp-action="Quotes"
+       asp-route-sort ="@ViewData["sort"]"
        asp-route-page="@(Model.GetPageNumber() - 1)"
+       asp-route-searchString="@ViewData["searchString"]"
        class="btn btn-outline-dark">
         <i class="glyphicon glyphicon-chevron-left"></i>
         Назад

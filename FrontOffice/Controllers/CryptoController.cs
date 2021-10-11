@@ -49,6 +49,8 @@ namespace FrontOffice.Controllers
                 page,
                 _countItemInPage);
 
+            ViewData["searchString"] = searchString;
+            
             ViewData["sort"] = sortOrder;
 
             return View(model);
