@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
-    using System.Threading;
     using Models;
     using Microsoft.Extensions.Logging;
     using System.Net.Http;
@@ -12,6 +11,7 @@
     using Dtos.Crypto;
     using Newtonsoft.Json;
     using Interfaces;
+    using PagedList;
 
     /// <summary>
     /// Сервис с криптовалютой. Загрузка, создание, обновление.
@@ -89,15 +89,11 @@
             UpdateOrCreateCryptoCurrencyMetadata(cryptoIdsInApi);
         }
 
-        /// <summary>
-        /// Получает модели crypto с фильтрами
-        /// </summary>
-        /// <param name="searchString">Искомая строка</param>
-        /// <param name="sortOrder">Сортировка</param>
-        /// <returns></returns>
-        public Crypto[] GetCryptoModelsWithFilters(
+        public Crypto[] GetCryptoModelsWithFiltersAndPaginate(
             string searchString,
-            string sortOrder)
+            string sortOrder,
+            int countOutput,
+            int pageNumber)
         {
             // TODO: в дальнейшей реализации сделать сортировку с помощью массива аргументов
 
@@ -131,19 +127,7 @@
                     break;
             }
 
-            return cryptos.ToArray();
-        }
-
-        /// <summary>
-        /// Мапит и выводит то кол-во которое задано
-        /// </summary>
-        /// <param name="cryptoModels"></param>
-        /// <param name="countOutput"></param>
-        /// <param name="pageNumber"></param>
-        /// <returns></returns>
-        public Crypto[] GetCryptoInfosWithPaginate(Crypto[] cryptoInfo, int countOutput, int pageNumber)
-        {
-            return cryptoInfo.Skip((pageNumber - 1) * countOutput).Take(countOutput).ToArray();
+            return cryptos.ToPagedList(pageNumber, countOutput).ToArray();
         }
 
         private void UpdateOrCreateCrypto(Crypto newCrypto)

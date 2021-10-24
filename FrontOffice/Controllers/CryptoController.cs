@@ -32,12 +32,9 @@ namespace FrontOffice.Controllers
             ViewBag.PercentChangePerDay = "PercentChangePerDay";
             ViewBag.CapitalizationMarketCap = "CapitalizationMarketCap";
 
-            var cryptoModels = _cryptoService.GetCryptoModelsWithFilters(
+            var paginateCryptoModels = _cryptoService.GetCryptoModelsWithFiltersAndPaginate(
                 searchString,
-                sortOrder);
-
-            var paginateCryptoModels = _cryptoService.GetCryptoInfosWithPaginate(
-                cryptoModels,
+                sortOrder,
                 _countItemInPage,
                 page);
 
@@ -45,7 +42,7 @@ namespace FrontOffice.Controllers
 
             var model = new QuotesViewModel(
                 infoCryptoModels,
-                cryptoModels.Length,
+                _cryptoService.GetCountCryptoModelsInDb(),
                 page,
                 _countItemInPage);
 

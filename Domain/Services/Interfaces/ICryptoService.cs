@@ -37,21 +37,13 @@
         /// </summary>
         /// <param name="searchString">Искомая строка</param>
         /// <param name="sortOrder">Сортировка</param>
+        /// <param name="countOutput">Количество выводимых моделей</param>
+        /// <param name="pageNumber">Номер страницы</param>
         /// <returns></returns>
-        public Crypto[] GetCryptoModelsWithFilters(
+        public Crypto[] GetCryptoModelsWithFiltersAndPaginate(
             string searchString,
-            string sortOrder);
-
-        /// <summary>
-        /// Мапит и выводит то кол-во которое задано
-        /// </summary>
-        /// <param name="cryptoModels"></param>
-        /// <param name="countOutput"></param>
-        /// <param name="pageNumber"></param>
-        /// <returns></returns>
-        public Crypto[] GetCryptoInfosWithPaginate(
-            Crypto[] cryptoModels,
-            int countOutput,
+            string sortOrder,
+            int countOutput, 
             int pageNumber);
     }
 }
